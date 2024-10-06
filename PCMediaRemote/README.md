@@ -8,4 +8,4 @@ The [`pkg_install`](pkg_install/) folder contains separate install packages for 
 project versions/examples.
 
 Package listing:
-- [`pkg_install`](pkg_install/)
+- [`RP2040_MediaRemote`](pkg_install/RP2040_MediaRemote/1-ABOUT.md)
