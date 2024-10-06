@@ -9,7 +9,7 @@ _THIS_FILE = abspath(__file__); _THIS_DIR = dirname(_THIS_FILE)
 _THIS_REPO = abspath(joinpath(_THIS_DIR, "..", "..", ".."))
 
 SYNC_LIBS = [
-	joinpath("libpython", "MyState"),
+	joinpath("lib_cktpy", "CelIRcom"),
 	joinpath("lib_cktpy", "CtrlInputWrap"),
 ]
 
