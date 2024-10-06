@@ -29,8 +29,13 @@ Plug in USB to RP2040 board while holding the BOOTSEL button.
 <!----------------------------------------------------------------------------->
 - CircuitPython (Tested: v9.0.0)
 - From "CircuitPython Library Bundle" ([Download here][CPY_LIBS])
-  - Copy from bundle .zip file to the microcontroller `drive:\lib` folder:
+  - Copy from bundle .zip file to the microcontroller `drive:\lib\` folder:
     - `adafruit_hid`
+
+Copy custom project code to microcontroller `drive:`:
+- `PCMediaRemote\lib_cktpy\*` => `drive:\lib\`
+- `.\*.py` => `drive:\`
+- ==> Can use automated script `pkg_upload.py` in [../1-PkgUpload/](../1-PkgUpload/)
 
 # Comments
 <!----------------------------------------------------------------------------->
