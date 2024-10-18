@@ -1,11 +1,11 @@
-#demos/mediaRemote: Turn your microcontroller board into a media remote receiver for your PC/Mac.
+#demos\MediaRemote_RP2040: Turn your microcontroller board into a media remote receiver for your PC/Mac.
 #-------------------------------------------------------------------------------
 from CelIRcom.TRx_pulseio import IRRx
 from CelIRcom.ProtocolsBase import IRMsg32
 import CelIRcom.Protocols_PDE as PDE
 from CelIRcom.Timebase import now_ms, ms_elapsed
 from CelIRcom.EasyIRRx import EasyRx
-from CtrlInputWrap.USBHID_Keyboard import KeysMain, KeysCC, Keycode, CCC
+from EasyCktIO.USBHID_Keyboard import KeysMain, KeysCC, Keycode, CCC
 import board
 
 
@@ -119,16 +119,10 @@ class IRDetect(EasyRx):
 irdetect = IRDetect(rx, PDE.DecoderNEC(), PDE.DecoderNECRPT(), msgRPT=PDE.IRMSG32_NECRPT)
 
 
-#=State
-#===============================================================================
-signal_last = None
-signal_last_startMS = now_ms()
-
-
 #=Main loop
 #===============================================================================
-print("mediaRemote: ready to receive!")
-print("\nHI2")
+print("HELLO24") #DEBUG: Change me to ensure uploaded version matches.
+print("MediaRemote: ready to receive!")
 while True:
     irdetect.process_events()
 #end program
