@@ -6,7 +6,7 @@ from os.path import join as joinpath
 #User config
 #-------------------------------------------------------------------------------
 DEST_DRIVE = "E:\\"
-proj = "RP2040_MediaRemote"
+proj = "MediaRemote_RP2040"
 
 proj = joinpath("pkg_install", proj)
 UploadProj(proj, DEST_DRIVE, refresh_libs=True)
