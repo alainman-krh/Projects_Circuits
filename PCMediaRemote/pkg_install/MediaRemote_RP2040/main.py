@@ -25,10 +25,12 @@ SEND_NUMPAD = True #Send numpad keys vs standard numbers/enter key (SEND_CONSUME
 #=Platform/build-dependent config (Raspberry Pi Pico RP2040)
 #===============================================================================
 rx_pin = board.GP28
-#rx_pin = board.GP28 #Variant: KB2040 "Kee Boar"-based
+#rx_pin = board.D9 #Variant: KB2040 "Kee Boar"-based
+#rx_pin = board.GP4 #Variant: RP2040 + PiCowbell STEMMA-QT port (Signal: SDA)
+#rx_pin = board.SDA #Variant: Adafruit board using BUILT-IN STEMMA-QT port (Signal: SDA)
 
 
-#=Base keymap
+#=Base keymap (Maps the function of a button to corresponding keyboard keys)
 #===============================================================================
 KEYMAP = {
     "PLAY": KeysCC(CCC.PLAY_PAUSE)        , "PAUSE": KeysCC(CCC.PLAY_PAUSE),
@@ -68,9 +70,8 @@ KEYMAP["<<-only"] = KEYMAP[SKIPCHAR+"<<"]
 KEYMAP[">>-only"] = KEYMAP[">>"+SKIPCHAR]
 
 
-#=Main config
+#=Signal map: Maps IR remote signals to the function associated with the button
 #===============================================================================
-rx = IRRx(rx_pin)
 SIGNAL_MAP_ADAFRUIT_389_CCC = { #Mapping for Adafruit 389 Mini Remote Control
     0xFF629D: "PLAY", 0xFFC23D: "STOP",
     0xFFA25D: "VOL-", 0xFFE21D: "VOL+",
@@ -102,6 +103,9 @@ SIGNAL_MAP_LG_EXTRAS = { #Mapping for some LG IR remote (NEC protocol)
     0x20DFE01F: "NAV_LEFT", 0x20DF609F: "NAV_RIGHT",
     0x20DF14EB: "BACK", 0x20DFDA25: "EXIT",
 }
+SIGNAL_MAP_SAMSUNG_EXAMPLE = { #Mapping for some Samsung IR remote
+    0xE0E0D02F: "VOL-", 0xE0E0E01F: "VOL+",
+}
 
 #Respond to both remotes (NOTE: cannot have overlapping codes)
 SIGNAL_MAP = {}
@@ -110,6 +114,7 @@ SIGNAL_MAP.update(SIGNAL_MAP_LG_CCC)
 if not SEND_CONSUMERCONTROL_ONLY:
     SIGNAL_MAP.update(SIGNAL_MAP_ADAFRUIT_389_EXTRAS)
     SIGNAL_MAP.update(SIGNAL_MAP_LG_EXTRAS)
+SIGNAL_MAP.update(SIGNAL_MAP_SAMSUNG_EXAMPLE) #Example/test only (only 2 extra signals - leave in)
 
 
 #=Event handlers
@@ -135,7 +140,10 @@ class IRDetect(EasyRx):
         key = KEYMAP[sig] #A key that can be sent out through USB-HID interface
         key.release()
 
+rx = IRRx(rx_pin)
 irdetect = IRDetect(rx, PDE.DecoderNEC(), PDE.DecoderNECRPT(), msgRPT=PDE.IRMSG32_NECRPT)
+#Use this one instead for Samsung remotes:
+#irdetect = IRDetect(rx, PDE.DecoderSamsung()) #This remote doesn't have a special "repeat" command
 
 
 #=Main loop
