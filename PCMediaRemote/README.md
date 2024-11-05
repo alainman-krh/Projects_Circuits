@@ -1,7 +1,7 @@
-[CPY_LIBS]: <https://circuitpython.org/libraries>
-[LG_IRRMT_COMPAT]: <https://www.amazon.ca/dp/B0BHT5BW41>
-[ADA_IRRMT]: <https://www.adafruit.com/product/389>
-[ADA_HIDLIB]: <https://docs.circuitpython.org/projects/hid/en/latest/index.html>
+[LIBBND_CKTPY]: <https://circuitpython.org/libraries>
+[LIB_ADA_HID]: <https://docs.circuitpython.org/projects/hid/en/latest/index.html>
+[IRRMT_LG_COMPAT]: <https://www.amazon.ca/dp/B0BHT5BW41>
+[IRRMT_ADA]: <https://www.adafruit.com/product/389>
 ## `PCMediaRemote`: A CircuitPython project
 <!----------------------------------------------------------------------------->
 Media remote receiver for your PC/MAC/thing supporting keyboard media keys.
@@ -18,8 +18,8 @@ Media remote receiver for your PC/MAC/thing supporting keyboard media keys.
 ## Provided/tested configuration
 <!----------------------------------------------------------------------------->
 - Targets Raspberry Pi Pico RP2040 board.
-- Works with [Adafruit mini remote control (ID 389)][ADA_IRRMT].
-- Works with [LG-compatible remote HERE][LG_IRRMT_COMPAT] (Good responsiveness).
+- Works with [Adafruit mini remote control (ID 389)][IRRMT_ADA].
+- Works with [LG-compatible remote HERE][IRRMT_LG_COMPAT] (Good responsiveness).
 - Tested on Windows/Mac/Linux.
 
 # Uploading to a microcontroller (installation)
@@ -36,7 +36,7 @@ Plug in USB to RP2040 board while holding the BOOTSEL button.
 
 ## Uploading: Dependencies/required libraries
 <!----------------------------------------------------------------------------->
-- From "CircuitPython Library Bundle" ([Download here][CPY_LIBS])
+- From "CircuitPython Library Bundle" ([Download here][LIBBND_CKTPY])
   - Copy from bundle .zip file to the microcontroller `[drive:]\lib\` folder:
     - `adafruit_hid`
 - From this `[PCMediaRemote]` folder:
@@ -67,6 +67,6 @@ TODO:
 
 # Additional resources/links
 <!----------------------------------------------------------------------------->
-- [DOCS: `CelIRcom` library](lib_cktpy\CelIRcom\1-README.md)
-- [DOCS: Adafruit USB HID library][ADA_HIDLIB]
-- [More on IR communications/decoding](lib_cktpy\CelIRcom\1-Resources.md)
+- [DOCS: `CelIRcom` library](lib_cktpy/CelIRcom/1-README.md)
+- [DOCS: Adafruit USB HID library][LIB_ADA_HID]
+- [More on IR communications/decoding](lib_cktpy/CelIRcom/1-Resources.md)
