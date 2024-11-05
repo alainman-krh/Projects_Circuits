@@ -1,5 +1,6 @@
 [LIBBND_CKTPY]: <https://circuitpython.org/libraries>
 [LIB_ADA_HID]: <https://docs.circuitpython.org/projects/hid/en/latest/index.html>
+[LIB_CKTPY_PULSEIO]: <https://docs.circuitpython.org/en/latest/shared-bindings/pulseio/>
 [IRRMT_LG_COMPAT]: <https://www.amazon.ca/dp/B0BHT5BW41>
 [IRRMT_ADA]: <https://www.adafruit.com/product/389>
 ## `PCMediaRemote`: A CircuitPython project
@@ -68,5 +69,9 @@ TODO:
 # Additional resources/links
 <!----------------------------------------------------------------------------->
 - [DOCS: `CelIRcom` library](lib_cktpy/CelIRcom/1-README.md)
-- [DOCS: Adafruit USB HID library][LIB_ADA_HID]
+- [DOCS: CircuitPython pulseio module][LIB_CKTPY_PULSEIO]
+- [DOCS: Adafruit HID library (USB Human Interface Devices)][LIB_ADA_HID]
 - [More on IR communications/decoding](lib_cktpy/CelIRcom/1-Resources.md)
+
+    Adafruit HID library (USB Human Interface Devices)
+    CircuitPython pulseio module
