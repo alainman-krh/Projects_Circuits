@@ -72,6 +72,3 @@ TODO:
 - [DOCS: CircuitPython pulseio module][LIB_CKTPY_PULSEIO]
 - [DOCS: Adafruit HID library (USB Human Interface Devices)][LIB_ADA_HID]
 - [More on IR communications/decoding](lib_cktpy/CelIRcom/1-Resources.md)
-
-    Adafruit HID library (USB Human Interface Devices)
-    CircuitPython pulseio module
