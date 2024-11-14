@@ -14,7 +14,7 @@ import board
 #https://docs.circuitpython.org/projects/hid/en/latest/api.html#adafruit_hid.consumer_control_code.ConsumerControlCode
 
 
-#=Option slect
+#=Option select
 #===============================================================================
 SEND_CONSUMERCONTROL_ONLY = False #Support basic media keys only (remote will not "type text")
 #==> (Not likely to want "extras" to be sent to your PC (numeric values + arrows))
@@ -22,12 +22,23 @@ SEND_SKIP_IF_FFREW_ONLY = True #Send "skip" keys on remotes that only support FF
 SEND_NUMPAD = True #Send numpad keys vs standard numbers/enter key (SEND_CONSUMERCONTROL_ONLY must =False)
 
 
-#=Platform/build-dependent config (Raspberry Pi Pico RP2040)
+#=Platform/build-dependent config
 #===============================================================================
-rx_pin = board.GP28
-#rx_pin = board.D9 #Variant: KB2040 "Kee Boar"-based
-#rx_pin = board.GP4 #Variant: RP2040 + PiCowbell STEMMA-QT port (Signal: SDA)
-#rx_pin = board.SDA #Variant: Adafruit board using BUILT-IN STEMMA-QT port (Signal: SDA)
+#Choose pin used for receiving IR signals (depends on platform/variant):
+if "raspberry_pi_pico" == board.board_id:
+    rx_pin = board.GP28 #Default to use (for standard RP2040-Pico board)
+    #rx_pin = board.GP4 #Variant: RP2040-Pico on PiCowbell STEMMA-QT port (Signal: SDA)
+elif "adafruit_kb2040" == board.board_id:
+    rx_pin = board.D9 #KB2040 "Kee Boar" variant/build using pin on opposite end from USB
+elif "adafruit_qt2040_trinkey" == board.board_id:
+    rx_pin = board.SDA #Only the STEMMA-QT port is available.
+elif "circuitplayground_express" == board.board_id:
+    #Doesn't work: Runs out of memory
+    rx_pin = board.REMOTEIN #Adafruit Circuit Playground Express (built-in IR receiver)
+elif "circuitplayground_bluefruit" == board.board_id:
+    rx_pin = board.SDA #Adafruit Circuit Playground Bluefruit
+else: #No specific variant/build defined. Default to using SDA port
+    rx_pin = board.SDA #Typically on the BUILT-IN STEMMA-QT port (for Adafruit boards)
 
 
 #=Base keymap (Maps the function of a button to corresponding keyboard keys)
@@ -149,7 +160,7 @@ irdetect = IRDetect(rx, PDE.DecoderNEC(), PDE.DecoderNECRPT(), msgRPT=PDE.IRMSG3
 #=Main loop
 #===============================================================================
 print("HELLO24") #DEBUG: Change me to ensure uploaded version matches.
-print("MediaRemote: ready to receive!")
+print(f"MediaRemote: ready to receive on pin '{rx_pin}'!")
 while True:
     irdetect.process_events()
 #end program

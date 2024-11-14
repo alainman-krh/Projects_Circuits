@@ -60,11 +60,13 @@ microcontroller `[drive:]`:
 # ⚠️ Known issues
 <!----------------------------------------------------------------------------->
 - SAMD21 boards: Typically do not support `pulseio` (required library). Also has insufficient memory (compile to `.mpy`?).
-- Circuit Playground Bluefruit: Works - but somewhat sluggish. Needs optimization.
+- Circuit Playground Bluefruit: Works - but somewhat sluggish. Needs optimization. Suggestion: fewer dynamic allocations.
 
 TODO:
 - `CelIRcom` library dynamically allocates memory (inefficient). Preferable to use static arrays instead.
 - Provide `.mpy` (compiled) lib?
+- Look for NOALLOC, `ptrain???_build`
+- Does gc.collect() help or hinder???
 
 # Additional resources/links
 <!----------------------------------------------------------------------------->
