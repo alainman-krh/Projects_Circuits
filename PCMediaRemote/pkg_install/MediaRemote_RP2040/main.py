@@ -25,7 +25,7 @@ SEND_NUMPAD = True #Send numpad keys vs standard numbers/enter key (SEND_CONSUME
 #=Platform/build-dependent config
 #===============================================================================
 #Choose pin used for receiving IR signals (depends on platform/variant):
-if "raspberry_pi_pico" == board.board_id:
+if board.board_id in ("raspberry_pi_pico", "raspberry_pi_pico2"):
     rx_pin = board.GP28 #Default to use (for standard RP2040-Pico board)
     #rx_pin = board.GP4 #Variant: RP2040-Pico on PiCowbell STEMMA-QT port (Signal: SDA)
 elif "adafruit_kb2040" == board.board_id:
