@@ -20,6 +20,11 @@ SEND_CONSUMERCONTROL_ONLY = False #Support basic media keys only (remote will no
 #==> (Not likely to want "extras" to be sent to your PC (numeric values + arrows))
 SEND_SKIP_IF_FFREW_ONLY = True #Send "skip" keys on remotes that only support FF/RW (no proper skip buttons)
 SEND_NUMPAD = True #Send numpad keys vs standard numbers/enter key (SEND_CONSUMERCONTROL_ONLY must =False)
+USEOPT_MOUSECLICK = True #Use optional mouse click
+
+if USEOPT_MOUSECLICK:
+	from Opt_MouseClick import handle_mouseclick
+	print("Mouse click option enabled")
 
 
 #=Platform/build-dependent config
@@ -27,6 +32,7 @@ SEND_NUMPAD = True #Send numpad keys vs standard numbers/enter key (SEND_CONSUME
 #Choose pin used for receiving IR signals (depends on platform/variant):
 if board.board_id in ("raspberry_pi_pico", "raspberry_pi_pico2"):
     rx_pin = board.GP28 #Default to use (for standard RP2040-Pico board)
+    #rx_pin = board.GP3 #Variant: RP2040-Pico with custom protoboard
     #rx_pin = board.GP4 #Variant: RP2040-Pico on PiCowbell STEMMA-QT port (Signal: SDA)
 elif "adafruit_kb2040" == board.board_id:
     rx_pin = board.D9 #KB2040 "Kee Boar" variant/build using pin on opposite end from USB
@@ -135,6 +141,12 @@ class IRDetect(EasyRx):
         sig = SIGNAL_MAP.get(msg.bits, None)
         IRcodestr = msg.str_hex()
         if sig is None:
+            if USEOPT_MOUSECLICK:
+                handled = handle_mouseclick(msg)
+                if handled:
+                    sig = "Mouse click"
+                    print(f"New message: {IRcodestr} ({sig})")
+                    return #Special button handled. Don't continue
             print("Unknown message:", IRcodestr)
             return
         print(f"New message: {IRcodestr} ({sig})")
