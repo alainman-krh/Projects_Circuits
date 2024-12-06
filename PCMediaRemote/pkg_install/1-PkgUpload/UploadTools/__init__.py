@@ -5,7 +5,6 @@ from os.path import basename, dirname, abspath, expandvars
 import os
 import tomllib
 import shutil
-import glob
 
 _THIS_FILE = abspath(__file__); _THIS_DIR = dirname(_THIS_FILE)
 _PROJROOT = abspath(joinpath(_THIS_DIR, "..", "..", ".."))
