@@ -47,12 +47,8 @@ def UploadFromFileDict(copyinfo:dict):
 #=UploadPkg
 #===============================================================================
 def UploadPkg(pkg, dest_drive, refresh_libs=True):
-	"proj: path relative to `MyState` root folder"
-
-	#Prepare environment variables
-	UpdateEnv(pkg, dest_drive)
-	for estr in ("PROJROOT", "THISPKG", "BOARDROOT"):
-		print(os.environ[estr])
+	"proj: path relative to `MyState` root folder"	
+	UpdateEnv(pkg, dest_drive) #Prepare environment variables
 
 	#Read in `pydrv_install.toml` definition:	
 	cfg = None #Define scope
