@@ -2,12 +2,16 @@
 #-------------------------------------------------------------------------------
 from UploadTools import UploadPkg
 from os.path import join as joinpath
+import os
 
 #User config
 #-------------------------------------------------------------------------------
 DEST_DRIVE = "E:\\"
-pkg = "MediaRemote_RP2040"
+#Update/activate to automatically install from Circuit Python library "bundle":
+#os.environ["LIBPATH_CPYBUNDLE"] = r"C:\path\to\adafruit-circuitpython-bundle-9.x-mpy\lib"
 
+
+pkg = "MediaRemote_RP2040"
 UploadPkg(pkg, DEST_DRIVE, refresh_libs=True)
 
 #Last line
