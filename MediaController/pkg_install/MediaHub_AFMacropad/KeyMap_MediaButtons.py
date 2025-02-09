@@ -29,6 +29,7 @@ KEYMAP = {
     "BACK":     KeysMain(Keycode.BACKSPACE) , "EXIT":      KeysMain(Keycode.ESCAPE),
 }
 
+
 #=Options: Numeric input (+enter/select/ok)
 #===============================================================================
 KEYMAP_NUMPAD = {
@@ -41,5 +42,15 @@ KEYMAP_NUMPAD = {
 def usenumpad(keymap:dict):
     """Option: Map to numpad keycodes instead of standard ones"""
     keymap.update(KEYMAP_NUMPAD) #Overwrite with numpad keycodes
+
+
+#=Options: Special "buttons"
+#===============================================================================
+#For remotes/controls that ONLY support FF/REW (missing next/previous track):
+KEYMAP["<<-only"] = KEYMAP["<<"]; KEYMAP[">>-only"] = KEYMAP[">>"] #Keep FF/REW behaviour
+
+def useskip_if_ffrew_only(keymap:dict):
+    """Option: re-define meaning of "<<-only" & ">>-only" "buttons"."""
+    keymap["<<-only"] = keymap["|<<"]; keymap[">>-only"] = keymap[">>|"]
 
 #Last line
