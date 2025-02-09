@@ -94,7 +94,8 @@ def Handle_MPencoderDelta(delta):
     NMSG = FilterVolClicks(delta)
     for i in range(NMSG):
         keycode.press()
-        keycode.release()
+    #Not sure if ok to release only once, but seems to behave better in Windows 10:
+    keycode.release()
 
 
 #==Global declarations
