@@ -11,7 +11,7 @@ from EasyCktIO.USBHID_Keyboard import KeysMain, KeysCC, Keycode, CCC
 
 #=Base keymap (Maps the function of a button to corresponding keyboard keys)
 #===============================================================================
-KEYMAP = {
+CODEMAP = {
     "PLAY": KeysCC(CCC.PLAY_PAUSE)        , "PAUSE": KeysCC(CCC.PLAY_PAUSE),
     "STOP": KeysCC(CCC.STOP)              , "EJECT": KeysCC(CCC.EJECT),
     "<<" : KeysCC(CCC.REWIND)             , ">>" :   KeysCC(CCC.FAST_FORWARD),
@@ -32,7 +32,7 @@ KEYMAP = {
 
 #=Options: Numeric input (+enter/select/ok)
 #===============================================================================
-KEYMAP_NUMPAD = {
+CODEMAP_NUMPAD = {
     "1": KeysMain(Keycode.KEYPAD_ONE),   "2": KeysMain(Keycode.KEYPAD_TWO),   "3": KeysMain(Keycode.KEYPAD_THREE),
     "4": KeysMain(Keycode.KEYPAD_FOUR),  "5": KeysMain(Keycode.KEYPAD_FIVE),  "6": KeysMain(Keycode.KEYPAD_SIX),
     "7": KeysMain(Keycode.KEYPAD_SEVEN), "8": KeysMain(Keycode.KEYPAD_EIGHT), "9": KeysMain(Keycode.KEYPAD_NINE),
@@ -41,13 +41,13 @@ KEYMAP_NUMPAD = {
 
 def usenumpad(keymap:dict):
     """Option: Map to numpad keycodes instead of standard ones"""
-    keymap.update(KEYMAP_NUMPAD) #Overwrite with numpad keycodes
+    keymap.update(CODEMAP_NUMPAD) #Overwrite with numpad keycodes
 
 
 #=Options: Special "buttons"
 #===============================================================================
 #For remotes/controls that ONLY support FF/REW (missing next/previous track):
-KEYMAP["<<-only"] = KEYMAP["<<"]; KEYMAP[">>-only"] = KEYMAP[">>"] #Keep FF/REW behaviour
+CODEMAP["<<-only"] = CODEMAP["<<"]; CODEMAP[">>-only"] = CODEMAP[">>"] #Keep FF/REW behaviour
 
 def useskip_if_ffrew_only(keymap:dict):
     """Option: re-define meaning of "<<-only" & ">>-only" "buttons"."""
