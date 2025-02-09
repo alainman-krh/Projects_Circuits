@@ -1,4 +1,4 @@
-#KeyMap_MediaButtons.py: maps media buttons (ex: IR remote) => media keycodes
+#CodeMap_MediaButtons.py: maps media buttons (ex: IR remote) => media keycodes
 #-------------------------------------------------------------------------------
 from EasyCktIO.USBHID_Keyboard import KeysMain, KeysCC, Keycode, CCC
 
