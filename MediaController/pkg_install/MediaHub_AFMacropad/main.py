@@ -1,7 +1,7 @@
 #demos\MediaHub_AFMacropad: Media control hub your PC/MAC/phone/thing supporting keyboard media keys.
 #-------------------------------------------------------------------------------
 from CodeMap_MediaButtons import CODEMAP, usenumpad, useskip_if_ffrew_only
-from HAL_Macropad import KeypadElement, KEYPAD_ENCODER
+from HAL_Macropad import KEYPAD_ENCODER, KEYPAD_KEYCOUNT, EasyMPKey
 from CelIRcom.TRx_pulseio import IRRx
 from CelIRcom.ProtocolsBase import IRMsg32
 import CelIRcom.Protocols_PDE as PDE
@@ -40,7 +40,7 @@ if not SEND_CONSUMERCONTROL_ONLY:
     SIGNAL_MAP.update(SignalMap_LGremote.SIGNALMAP_EXTRAS)
 
 
-#=Event handlers
+#=Event handlers: IR receiver
 #===============================================================================
 class IRDetect(EasyRx):
     def handle_press(self, msg:IRMsg32):
@@ -69,39 +69,38 @@ class IRDetect(EasyRx):
         keycode = CODEMAP[sig] #A key that can be sent out through USB-HID interface
         keycode.release()
 
-rx = IRRx(rx_pin)
-irdetect = IRDetect(rx, PDE.DecoderNEC(), PDE.DecoderNECRPT(), msgRPT=PDE.IRMSG32_NECRPT)
-#Use this one instead for Samsung remotes:
-#irdetect = IRDetect(rx, PDE.DecoderSamsung()) #This remote doesn't have a special "repeat" command
 
-from MyState.CtrlInputs.Buttons import Profiles, EasyButton, ButtonSensorIF
-
-
-#=Convenient implementations of ::EasyButton
+#=Event handlers: Macropad key presses
 #===============================================================================
-class EasyButton_SignalPressRel(EasyButton):
-    """Emits signals on press/release only (don't want to make too many objects)"""
-    def __init__(self, id, btnsense:ButtonSensorIF, profile=Profiles.DEFAULT):
-        super().__init__(id, btnsense, profile=profile)
+class EasyMPKey_HID(EasyMPKey):
+    """Translates macropad key events to HID keycodes"""
     def handle_press(self, id):
+        print("Press:", id)
         pass
     def handle_release(self, id):
+        print("Release:", id)
         pass
 
+
+#=Event handlers: Macropad rotary encoder
+#===============================================================================
 KEYCODE_VOLDN = CODEMAP["VOL-"]; KEYCODE_VOLUP = CODEMAP["VOL+"] #Cached
 def Handle_MPencoderDelta(delta):
     keycode = KEYCODE_VOLDN if delta < 0 else KEYCODE_VOLUP
     NMSG = FilterVolClicks(delta)
     for i in range(NMSG):
         keycode.press()
-    #Not sure if ok to release only once, but seems to behave better in Windows 10:
+    #Not sure if ok to release only once, but seems better behaved in Windows 10:
     keycode.release()
 
 
 #==Global declarations
 #===============================================================================
-KP_BUTTONS = [KeypadElement(idx=i) for i in range(12)]
-KP_ENCKNOB = KEYPAD_ENCODER #Alias
+rx = IRRx(rx_pin)
+irdetect = IRDetect(rx, PDE.DecoderNEC(), PDE.DecoderNECRPT(), msgRPT=PDE.IRMSG32_NECRPT)
+#For Samsung remotes, use the following:
+#irdetect = IRDetect(rx, PDE.DecoderSamsung()) #This remote doesn't have a special "repeat" command
+KEYPAD_KEYS = tuple(EasyMPKey_HID(idx=i) for i in range(KEYPAD_KEYCOUNT))
 
 
 #=Main loop
@@ -110,11 +109,11 @@ print("HELLO24") #DEBUG: Change me to ensure uploaded version matches.
 print(f"MediaHub: ready to rock!")
 while True:
     #Filter built-in rotary encoder knob into state control signals:
-    delta = KP_ENCKNOB.read_delta() #Resets position to 0 every time.
+    delta = KEYPAD_ENCODER.read_delta() #Resets position to 0 every time.
     if delta != 0:
         Handle_MPencoderDelta(delta)
-        print("CHANGE:", delta)
+        #print("CHANGE:", delta)
 
-    #irdetect.process_events()
-    pass
+    for key in KEYPAD_KEYS:
+        key.process_inputs()
 #end program
