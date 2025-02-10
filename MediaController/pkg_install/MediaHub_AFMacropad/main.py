@@ -2,11 +2,12 @@
 #-------------------------------------------------------------------------------
 from CodeMap_MediaControls import CODEMAP, usenumpad, useskip_if_ffrew_only
 from HAL_Macropad import KEYPAD_ENCODER, KEYPAD_KEYCOUNT, EasyMPKey
+import SignalMap_LGremote, SignalMap_ADA389, SignalMap_KeyPad
+
 from CelIRcom.TRx_pulseio import IRRx
 from CelIRcom.ProtocolsBase import IRMsg32
 import CelIRcom.Protocols_PDE as PDE
 from CelIRcom.EasyIRRx import EasyRx
-import CtrlMap_LGremote, CtrlMap_ADA389
 import board
 
 
@@ -30,21 +31,21 @@ def FilterVolClicks(delta): return delta*delta*1 #Square the value, and scale by
 #=Map IR remote signals to "media buttons" (dict-keys) defined in CODEMAP
 #===============================================================================
 #Respond to both remotes (Watch out for overlapping IR codes.)
-SIGNAL_MAP = {}
-SIGNAL_MAP.update(CtrlMap_ADA389.SIGNALMAP_CCC)
-SIGNAL_MAP.update(CtrlMap_LGremote.SIGNALMAP_CCC)
+CTRLMAP_IR = {}
+CTRLMAP_IR.update(SignalMap_ADA389.SIGNALMAP_CCC)
+CTRLMAP_IR.update(SignalMap_LGremote.SIGNALMAP_CCC)
 if not SEND_CONSUMERCONTROL_ONLY:
     #You might prefer not handling "extras" (beyond consumer control codes).
     #Will act as if someone is typing in numbers, etc on the keyboard.
-    SIGNAL_MAP.update(CtrlMap_ADA389.SIGNALMAP_EXTRAS)
-    SIGNAL_MAP.update(CtrlMap_LGremote.SIGNALMAP_EXTRAS)
+    CTRLMAP_IR.update(SignalMap_ADA389.SIGNALMAP_EXTRAS)
+    CTRLMAP_IR.update(SignalMap_LGremote.SIGNALMAP_EXTRAS)
 
 
 #=Event handlers: IR receiver
 #===============================================================================
 class IRDetect(EasyRx):
     def handle_press(self, msg:IRMsg32):
-        sig = SIGNAL_MAP.get(msg.bits, None)
+        sig = CTRLMAP_IR.get(msg.bits, None)
         IRcodestr = msg.str_hex()
         if sig is None:
 #            if USEOPT_MOUSECLICK:
@@ -63,7 +64,7 @@ class IRDetect(EasyRx):
         print(f"Repeat!") #Doesn't matter what msg is - USB-HID key still held down.
 
     def handle_release(self, msg:IRMsg32):
-        sig = SIGNAL_MAP.get(msg.bits, None)
+        sig = CTRLMAP_IR.get(msg.bits, None)
         if sig is None:
             return
         keycode = CODEMAP[sig] #A key that can be sent out through USB-HID interface
@@ -72,13 +73,17 @@ class IRDetect(EasyRx):
 
 #=Event handlers: Macropad key presses
 #===============================================================================
+KEYCODE_MPKEY = tuple(CODEMAP[id] for id in SignalMap_KeyPad.SIGNALMAP_VEC) #Cached
 class EasyMPKey_HID(EasyMPKey):
     """Translates macropad key events to HID keycodes"""
     def handle_press(self, id):
-        keycode = KEYCODE_VOLDN if delta < 0 else KEYCODE_VOLUP
-        print("Press:", id) #DEBUG
+        keycode = KEYCODE_MPKEY[id]
+        keycode.press()
+        #print("Press:", id) #DEBUG
     def handle_release(self, id):
-        print("Release:", id) #DEBUG
+        keycode = KEYCODE_MPKEY[id]
+        keycode.release()
+        #print("Release:", id) #DEBUG
 
 
 #=Event handlers: Macropad rotary encoder

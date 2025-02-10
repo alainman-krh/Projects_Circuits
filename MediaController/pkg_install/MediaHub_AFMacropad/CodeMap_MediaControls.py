@@ -1,4 +1,4 @@
-#CodeMap_MediaControls.py: maps media control ID strings => media keycodes
+#CodeMap_MediaControls.py: maps media control signal IDs => media keycodes
 #-------------------------------------------------------------------------------
 from EasyCktIO.USBHID_Keyboard import KeysMain, KeysCC, Keycode, CCC
 
@@ -9,7 +9,7 @@ from EasyCktIO.USBHID_Keyboard import KeysMain, KeysCC, Keycode, CCC
 #https://docs.circuitpython.org/projects/hid/en/latest/api.html#adafruit_hid.consumer_control_code.ConsumerControlCode
 
 
-#=Base codemap (Maps media control ID strings => media keycodes)
+#=Base codemap (Maps media control signal IDs => media keycodes)
 #===============================================================================
 CODEMAP = {
     "PLAY": KeysCC(CCC.PLAY_PAUSE)        , "PAUSE": KeysCC(CCC.PLAY_PAUSE),

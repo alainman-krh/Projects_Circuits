@@ -1,4 +1,4 @@
-#SignalMap_ADA389.py: maps Adafruit #389 "Mini Remote Control" codes => media buttons
+#SignalMap_ADA389.py: maps Adafruit #389 "Mini Remote Control" codes => media control signal IDs
 #-------------------------------------------------------------------------------
 
 SIGNALMAP_CCC = { #Base "Consumer Control Codes"

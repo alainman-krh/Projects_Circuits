@@ -1,4 +1,4 @@
-#SignalMap_LGremote.py: maps LG IR remote codes => media buttons
+#SignalMap_LGremote.py: maps LG IR remote codes => media control ID strings
 #-------------------------------------------------------------------------------
 
 SIGNALMAP_CCC = { #Base "Consumer Control Codes"
