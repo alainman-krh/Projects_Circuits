@@ -6,7 +6,8 @@ SIGNALMAP_VEC = (
     "NAV_LEFT", "|<<", "MUTE",
     "NAV_DOWN", "NAV_UP", "PAUSE",
     "NAV_RIGHT", ">>|", "STOP",
-    "SELECT", "PLAY", "EXIT", #TODO: Find code for "FIND"
+    "SELECT", "0", "EXIT",
+    #TODO: Find code for "SEARCH". Using "0" right now. On YouTube, "0" moves to start of video.
 )
 
 #Last line
