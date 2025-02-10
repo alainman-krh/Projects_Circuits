@@ -31,21 +31,21 @@ def FilterVolClicks(delta): return delta*delta*1 #Square the value, and scale by
 #=Map IR remote signals to "media buttons" (dict-keys) defined in CODEMAP
 #===============================================================================
 #Respond to both remotes (Watch out for overlapping IR codes.)
-CTRLMAP_IR = {}
-CTRLMAP_IR.update(SignalMap_ADA389.SIGNALMAP_CCC)
-CTRLMAP_IR.update(SignalMap_LGremote.SIGNALMAP_CCC)
+SIGNALMAP_IR = {}
+SIGNALMAP_IR.update(SignalMap_ADA389.SIGNALMAP_CCC)
+SIGNALMAP_IR.update(SignalMap_LGremote.SIGNALMAP_CCC)
 if not SEND_CONSUMERCONTROL_ONLY:
     #You might prefer not handling "extras" (beyond consumer control codes).
     #Will act as if someone is typing in numbers, etc on the keyboard.
-    CTRLMAP_IR.update(SignalMap_ADA389.SIGNALMAP_EXTRAS)
-    CTRLMAP_IR.update(SignalMap_LGremote.SIGNALMAP_EXTRAS)
+    SIGNALMAP_IR.update(SignalMap_ADA389.SIGNALMAP_EXTRAS)
+    SIGNALMAP_IR.update(SignalMap_LGremote.SIGNALMAP_EXTRAS)
 
 
 #=Event handlers: IR receiver
 #===============================================================================
 class IRDetect(EasyRx):
     def handle_press(self, msg:IRMsg32):
-        sig = CTRLMAP_IR.get(msg.bits, None)
+        sig = SIGNALMAP_IR.get(msg.bits, None)
         IRcodestr = msg.str_hex()
         if sig is None:
 #            if USEOPT_MOUSECLICK:
@@ -64,7 +64,7 @@ class IRDetect(EasyRx):
         print(f"Repeat!") #Doesn't matter what msg is - USB-HID key still held down.
 
     def handle_release(self, msg:IRMsg32):
-        sig = CTRLMAP_IR.get(msg.bits, None)
+        sig = SIGNALMAP_IR.get(msg.bits, None)
         if sig is None:
             return
         keycode = CODEMAP[sig] #A key that can be sent out through USB-HID interface
