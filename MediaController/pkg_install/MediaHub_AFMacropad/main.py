@@ -19,6 +19,7 @@ rx_pin = board.SDA #Only available pin: BUILT-IN STEMMA-QT port
 
 #=Configuration Options
 #===============================================================================
+ENABLE_IR = True #Can be left on. Doesn't crash/get slow.
 SEND_CONSUMERCONTROL_ONLY = False #Support basic media keys only
 #NOTE: You might prefer not handling "extras" (beyond consumer control codes).
 #      ==> Will act as if someone is typing in numbers, etc on the keyboard.
@@ -54,14 +55,15 @@ class IRDetect(EasyRx):
 #                    sig = "Mouse click"
 #                    print(f"New message: {IRcodestr} ({sig})")
 #                    return #Special button handled. Don't continue
-            print("Unknown message:", IRcodestr)
+            #print("Unknown message:", IRcodestr) #DEBUG
             return
-        print(f"New message: {IRcodestr} ({sig})")
+        #print(f"New message: {IRcodestr} ({sig})") #DEBUG
         keycode = CODEMAP[sig] #A key that can be sent out through USB-HID interface
         keycode.press()
 
     def handle_hold(self, msg:IRMsg32):
-        print(f"Repeat!") #Doesn't matter what msg is - USB-HID key still held down.
+        #print(f"Repeat!") #Doesn't matter what msg is - USB-HID key still held down.
+        pass
 
     def handle_release(self, msg:IRMsg32):
         sig = SIGNALMAP_IR.get(msg.bits, None)
@@ -120,4 +122,7 @@ while True:
 
     for key in KEYPAD_KEYS:
         key.process_inputs()
+
+    if ENABLE_IR:
+        irdetect.process_events()
 #end program
