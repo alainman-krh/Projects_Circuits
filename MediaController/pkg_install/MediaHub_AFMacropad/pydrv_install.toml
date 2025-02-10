@@ -18,9 +18,9 @@ folders = [
 [package]
 dest = "$BOARDROOT"
 files = [
-"$THISPKG/CodeMap_MediaButtons.py",
-"$THISPKG/SignalMap_LGremote.py",
-"$THISPKG/SignalMap_ADA389.py",
+"$THISPKG/CodeMap_MediaControls.py",
+"$THISPKG/CtrlMap_LGremote.py",
+"$THISPKG/CtrlMap_ADA389.py",
 "$THISPKG/HAL_Macropad.py",
 "$THISPKG/main.py",
 ]

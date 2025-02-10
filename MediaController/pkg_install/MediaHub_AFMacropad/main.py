@@ -1,12 +1,12 @@
 #demos\MediaHub_AFMacropad: Media control hub your PC/MAC/phone/thing supporting keyboard media keys.
 #-------------------------------------------------------------------------------
-from CodeMap_MediaButtons import CODEMAP, usenumpad, useskip_if_ffrew_only
+from CodeMap_MediaControls import CODEMAP, usenumpad, useskip_if_ffrew_only
 from HAL_Macropad import KEYPAD_ENCODER, KEYPAD_KEYCOUNT, EasyMPKey
 from CelIRcom.TRx_pulseio import IRRx
 from CelIRcom.ProtocolsBase import IRMsg32
 import CelIRcom.Protocols_PDE as PDE
 from CelIRcom.EasyIRRx import EasyRx
-import SignalMap_LGremote, SignalMap_ADA389
+import CtrlMap_LGremote, CtrlMap_ADA389
 import board
 
 
@@ -31,13 +31,13 @@ def FilterVolClicks(delta): return delta*delta*1 #Square the value, and scale by
 #===============================================================================
 #Respond to both remotes (Watch out for overlapping IR codes.)
 SIGNAL_MAP = {}
-SIGNAL_MAP.update(SignalMap_ADA389.SIGNALMAP_CCC)
-SIGNAL_MAP.update(SignalMap_LGremote.SIGNALMAP_CCC)
+SIGNAL_MAP.update(CtrlMap_ADA389.SIGNALMAP_CCC)
+SIGNAL_MAP.update(CtrlMap_LGremote.SIGNALMAP_CCC)
 if not SEND_CONSUMERCONTROL_ONLY:
     #You might prefer not handling "extras" (beyond consumer control codes).
     #Will act as if someone is typing in numbers, etc on the keyboard.
-    SIGNAL_MAP.update(SignalMap_ADA389.SIGNALMAP_EXTRAS)
-    SIGNAL_MAP.update(SignalMap_LGremote.SIGNALMAP_EXTRAS)
+    SIGNAL_MAP.update(CtrlMap_ADA389.SIGNALMAP_EXTRAS)
+    SIGNAL_MAP.update(CtrlMap_LGremote.SIGNALMAP_EXTRAS)
 
 
 #=Event handlers: IR receiver
@@ -75,11 +75,10 @@ class IRDetect(EasyRx):
 class EasyMPKey_HID(EasyMPKey):
     """Translates macropad key events to HID keycodes"""
     def handle_press(self, id):
-        print("Press:", id)
-        pass
+        keycode = KEYCODE_VOLDN if delta < 0 else KEYCODE_VOLUP
+        print("Press:", id) #DEBUG
     def handle_release(self, id):
-        print("Release:", id)
-        pass
+        print("Release:", id) #DEBUG
 
 
 #=Event handlers: Macropad rotary encoder
@@ -112,7 +111,7 @@ while True:
     delta = KEYPAD_ENCODER.read_delta() #Resets position to 0 every time.
     if delta != 0:
         Handle_MPencoderDelta(delta)
-        #print("CHANGE:", delta)
+        #print("CHANGE:", delta) #DEBUG
 
     for key in KEYPAD_KEYS:
         key.process_inputs()

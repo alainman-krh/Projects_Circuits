@@ -1,4 +1,4 @@
-#CodeMap_MediaButtons.py: maps media buttons (ex: IR remote) => media keycodes
+#CodeMap_MediaControls.py: maps media control ID strings => media keycodes
 #-------------------------------------------------------------------------------
 from EasyCktIO.USBHID_Keyboard import KeysMain, KeysCC, Keycode, CCC
 
@@ -9,7 +9,7 @@ from EasyCktIO.USBHID_Keyboard import KeysMain, KeysCC, Keycode, CCC
 #https://docs.circuitpython.org/projects/hid/en/latest/api.html#adafruit_hid.consumer_control_code.ConsumerControlCode
 
 
-#=Base keymap (Maps the function of a button to corresponding keyboard keys)
+#=Base codemap (Maps media control ID strings => media keycodes)
 #===============================================================================
 CODEMAP = {
     "PLAY": KeysCC(CCC.PLAY_PAUSE)        , "PAUSE": KeysCC(CCC.PLAY_PAUSE),
@@ -39,18 +39,18 @@ CODEMAP_NUMPAD = {
     "0": KeysMain(Keycode.KEYPAD_ZERO) , "SELECT": KeysMain(Keycode.KEYPAD_ENTER),
 }
 
-def usenumpad(keymap:dict):
+def usenumpad(codemap:dict):
     """Option: Map to numpad keycodes instead of standard ones"""
-    keymap.update(CODEMAP_NUMPAD) #Overwrite with numpad keycodes
+    codemap.update(CODEMAP_NUMPAD) #Overwrite with numpad keycodes
 
 
-#=Options: Special "buttons"
+#=Options: Special media control "buttons"
 #===============================================================================
 #For remotes/controls that ONLY support FF/REW (missing next/previous track):
 CODEMAP["<<-only"] = CODEMAP["<<"]; CODEMAP[">>-only"] = CODEMAP[">>"] #Keep FF/REW behaviour
 
-def useskip_if_ffrew_only(keymap:dict):
+def useskip_if_ffrew_only(codemap:dict):
     """Option: re-define meaning of "<<-only" & ">>-only" "buttons"."""
-    keymap["<<-only"] = keymap["|<<"]; keymap[">>-only"] = keymap[">>|"]
+    codemap["<<-only"] = codemap["|<<"]; codemap[">>-only"] = codemap[">>|"]
 
 #Last line
