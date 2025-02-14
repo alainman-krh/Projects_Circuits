@@ -19,7 +19,7 @@ rx_pin = board.SDA #Only available pin: BUILT-IN STEMMA-QT port
 
 #=Configuration Options
 #===============================================================================
-ENABLE_IR = True #Can be left on. Doesn't crash/get slow.
+ENABLE_IR = False #Might detect false signals if no IR reciever is connected.
 SEND_CONSUMERCONTROL_ONLY = False #Support basic media keys only
 #NOTE: You might prefer not handling "extras" (beyond consumer control codes).
 #      ==> Will act as if someone is typing in numbers, etc on the keyboard.
@@ -27,6 +27,7 @@ SEND_CONSUMERCONTROL_ONLY = False #Support basic media keys only
 useskip_if_ffrew_only(CODEMAP) #Re-define meaning of "<<-only" & ">>-only" "buttons".
 #Filter encoder clicks to number of generated of Vol+/- messages:
 def FilterVolClicks(delta): return delta*delta*1 #Square the value, and scale by 1
+RGB_KEYDOWN = (50, 50, 50); RGB_KEYUP = (0, 0, 0)
 
 
 #=Map IR remote signals to "media buttons" (dict-keys) defined in CODEMAP
@@ -75,22 +76,26 @@ class IRDetect(EasyRx):
 
 #=Event handlers: Macropad key presses
 #===============================================================================
-KEYCODE_MPKEY = tuple(CODEMAP[id] for id in SignalMap_KeyPad.SIGNALMAP_VEC) #Cached
 class EasyMPKey_HID(EasyMPKey):
     """Translates macropad key events to HID keycodes"""
+    def __init__(self, idx, keycode):
+        super().__init__(idx)
+        self.keycode = keycode
+        self.pixel_set(RGB_KEYUP)
+
     def handle_press(self, id):
-        keycode = KEYCODE_MPKEY[id]
-        keycode.press()
+        self.pixel_set(RGB_KEYDOWN)
+        self.keycode.press()
         #print("Press:", id) #DEBUG
     def handle_release(self, id):
-        keycode = KEYCODE_MPKEY[id]
-        keycode.release()
+        self.pixel_set(RGB_KEYUP)
+        self.keycode.release()
         #print("Release:", id) #DEBUG
 
 
 #=Event handlers: Macropad rotary encoder
 #===============================================================================
-KEYCODE_VOLDN = CODEMAP["VOL-"]; KEYCODE_VOLUP = CODEMAP["VOL+"] #Cached
+KEYCODE_VOLDN = CODEMAP["VOL-"]; KEYCODE_VOLUP = CODEMAP["VOL+"] #Cached keycode
 def Handle_MPencoderDelta(delta):
     keycode = KEYCODE_VOLDN if delta < 0 else KEYCODE_VOLUP
     NMSG = FilterVolClicks(delta)
@@ -102,11 +107,14 @@ def Handle_MPencoderDelta(delta):
 
 #==Global declarations
 #===============================================================================
-rx = IRRx(rx_pin)
-irdetect = IRDetect(rx, PDE.DecoderNEC(), PDE.DecoderNECRPT(), msgRPT=PDE.IRMSG32_NECRPT)
-#For Samsung remotes, use the following:
-#irdetect = IRDetect(rx, PDE.DecoderSamsung()) #This remote doesn't have a special "repeat" command
-KEYPAD_KEYS = tuple(EasyMPKey_HID(idx=i) for i in range(KEYPAD_KEYCOUNT))
+irdetect = None
+if ENABLE_IR:
+    rx = IRRx(rx_pin)
+    irdetect = IRDetect(rx, PDE.DecoderNEC(), PDE.DecoderNECRPT(), msgRPT=PDE.IRMSG32_NECRPT)
+    #For Samsung remotes, use the following:
+    #irdetect = IRDetect(rx, PDE.DecoderSamsung()) #This remote doesn't have a special "repeat" command
+KEYCODE_MPKEY = tuple(CODEMAP[id] for id in SignalMap_KeyPad.SIGNALMAP_VEC) #Figure out what keycode to send for each key on keypad
+KEYPAD_KEYS = tuple(EasyMPKey_HID(i, KEYCODE_MPKEY[i]) for i in range(KEYPAD_KEYCOUNT))
 
 
 #=Main loop
@@ -123,6 +131,6 @@ while True:
     for key in KEYPAD_KEYS:
         key.process_inputs()
 
-    if ENABLE_IR:
+    if irdetect != None:
         irdetect.process_events()
 #end program

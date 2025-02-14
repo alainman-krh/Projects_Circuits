@@ -11,12 +11,13 @@ r"""HAL layer helping to reduce complexity of interfacing with Adafruit Macropad
 
 #==Constants
 #===============================================================================
+MAX_BRIGHTNESS = 0.2 #Limit max brightness... these Neopixels are bright!!!
 KEYPAD_SENSEPIN_LIST = ( #Pin references only. Does not directly measure input state:
 	board.KEY1, board.KEY2, board.KEY3, board.KEY4, board.KEY5, board.KEY6,
 	board.KEY7, board.KEY8, board.KEY9, board.KEY10, board.KEY11, board.KEY12,
 )
 KEYPAD_KEYCOUNT = len(KEYPAD_SENSEPIN_LIST)
-KEYPAD_NPX = NeoPixel(board.NEOPIXEL, KEYPAD_KEYCOUNT) #One object. Indexable per key.
+KEYPAD_NPX = NeoPixel(board.NEOPIXEL, KEYPAD_KEYCOUNT, brightness=MAX_BRIGHTNESS) #One object. Indexable per key.
 KEYPAD_ENCODER = EncoderSensorRIO(board.ENCODER_A, board.ENCODER_B)
 
 
