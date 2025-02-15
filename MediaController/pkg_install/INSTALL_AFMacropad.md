@@ -21,6 +21,7 @@ Before uploading the python code, you must install a copy of CircuitPython from 
 ## Uploading: using python script (optional/alternate)
 <!----------------------------------------------------------------------------->
 An optional install script is provided in [.\1-PkgUpload\pkg_upload.py](./1-PkgUpload/pkg_upload.py).
+- [pkg_upload: README](./1-PkgUpload/README.md)
 
 To have the script automatically upload contents of a "CircuitPython Library Bundle"
 already unzipped on your system, you must un-comment the `LIBPATH_CPYBUNDLE`
