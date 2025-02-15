@@ -23,9 +23,9 @@ Before uploading the python code, you must install a copy of CircuitPython from 
 An optional install script is provided in [.\1-PkgUpload\pkg_upload.py](./1-PkgUpload/pkg_upload.py).
 - [pkg_upload: README](./1-PkgUpload/README.md)
 
-To have the script automatically upload contents of a "CircuitPython Library Bundle"
-already unzipped on your system, you must un-comment the `LIBPATH_CPYBUNDLE`
-environment variable and set it to this path.
+To have the script automatically upload contents of a "CircuitPython Library Bundle",
+you must un-comment the `LIBPATH_CPYBUNDLE` environment variable and set it
+to the unzipped library bundle path.
 
 1. Set `DEST_DRIVE` variable to point to your specific microcontroller.
 2. Make sure `pkg` is set to the correct install package (`"MediaHub_AFMacropad"` in this case)
