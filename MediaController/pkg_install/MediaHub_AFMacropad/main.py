@@ -50,12 +50,6 @@ class IRDetect(EasyRx):
         sig = SIGNALMAP_IR.get(msg.bits, None)
         IRcodestr = msg.str_hex()
         if sig is None:
-#            if USEOPT_MOUSECLICK:
-#                handled = handle_mouseclick(msg)
-#                if handled:
-#                    sig = "Mouse click"
-#                    print(f"New message: {IRcodestr} ({sig})")
-#                    return #Special button handled. Don't continue
             #print("Unknown message:", IRcodestr) #DEBUG
             return
         #print(f"New message: {IRcodestr} ({sig})") #DEBUG
