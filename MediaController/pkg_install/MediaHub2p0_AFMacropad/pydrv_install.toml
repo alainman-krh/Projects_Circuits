@@ -1,0 +1,25 @@
+[modules.CPYBUNDLE]
+dest = "$BOARDROOT/lib"
+files = [
+"$LIBPATH_CPYBUNDLE/neopixel.mpy",
+]
+folders = [
+"$LIBPATH_CPYBUNDLE/adafruit_hid",
+"$LIBPATH_CPYBUNDLE/adafruit_seesaw",
+]
+
+[modules]
+dest = "$BOARDROOT/lib"
+folders = [
+"$PROJROOT/libpython/MyState",
+"$PROJROOT/lib_cktpy/EasyCktIO",
+]
+
+[package]
+dest = "$BOARDROOT"
+files = [
+"$THISPKG/CodeMap_MediaControls.py",
+"$THISPKG/SignalMap_Keypad.py",
+"$THISPKG/HAL_Macropad.py",
+"$THISPKG/main.py",
+]
