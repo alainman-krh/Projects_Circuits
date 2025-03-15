@@ -20,7 +20,7 @@ Build-your-own media control surface with CircuitPython-powered microcontrollers
 
 ## MediaHub: microcontroller packages
 <!----------------------------------------------------------------------------->
-- [`MediaHub_AFMacropad`](MediaHub_AFMacropad/): Media control (opt Bluetooth).
+- [`MediaHub_AFMacropad`](MediaHub_AFMacropad/): Media control.
   - Targets [Adafruit RP2040 Macropad][ADABRD_RP2040MPAD] board.
   - (Optional) Works with [Adafruit mini remote control (ID 389)][IRRMT_ADA] or [LG-compatible remote HERE][IRRMT_LG_COMPAT] (Good responsiveness).
   - NOTE: IR remote add-on requires modifying a STEMMA-QT cable to connect to an IR receiver module (more advanced).
@@ -30,7 +30,7 @@ Build-your-own media control surface with CircuitPython-powered microcontrollers
 
 ## MediaHub 2.0: microcontroller packages
 <!----------------------------------------------------------------------------->
-- [`MediaHub2p0_AFMacropad`](MediaHub2p0_AFMacropad/): Media control + extra large volume knob on STEMMA-QT port. (opt Bluetooth)
+- [`MediaHub2p0_AFMacropad`](MediaHub2p0_AFMacropad/): Media control + extra large volume knob on STEMMA-QT port.
   - Targets [Adafruit RP2040 Macropad][ADABRD_RP2040MPAD] board.
   - [💾 List of files/libs to install](MediaHub2p0_AFMacropad/pydrv_install.toml)
   - [🚀 Installation instructions](./1-INSTALL.md)
