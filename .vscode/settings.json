@@ -5,7 +5,8 @@
     },
     "python.analysis.extraPaths": [
         //Switch following to match project currently being modified:
-        "${workspaceFolder}\\PCMediaRemote\\libpython",
-        "${workspaceFolder}\\PCMediaRemote\\lib_cktpy",
+        //PCMediaRemote/MediaController/
+        "${workspaceFolder}\\MediaController\\libpython",
+        "${workspaceFolder}\\MediaController\\lib_cktpy",
     ]
 }
