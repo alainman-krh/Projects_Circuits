@@ -1,4 +1,4 @@
-#demos\MediaHub_AFMacropad: Media control hub your PC/MAC/phone/thing supporting keyboard media keys.
+#demos\MediaHub2p0_AFMacropad: Media control hub your PC/MAC/phone/thing supporting keyboard media keys.
 #-------------------------------------------------------------------------------
 from CodeMap_MediaControls import CODEMAP, usenumpad
 from HAL_Macropad import KEYPAD_ENCODER, KEYPAD_KEYCOUNT, EasyMPKey
@@ -10,6 +10,11 @@ import board
 
 #=Platform/build-dependent config
 #===============================================================================
+r"""NOTE:
+- Adafruit Macropad keys sends media transport keys, etc
+- Adafruit Macropad rotary encoder sends FF/REW keys.
+- Adafruit I2C Stemma QT rotary encoder controls volume with a larger knob than possible on Macropad
+"""
 I2CDID_VOLENC = 0x36 #I2C device ID for (volume) rotary encoder "seesaw" module
 
 

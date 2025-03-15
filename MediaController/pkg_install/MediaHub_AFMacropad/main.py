@@ -113,7 +113,7 @@ KEYPAD_KEYS = tuple(EasyMPKey_HID(i, KEYCODE_MPKEY[i]) for i in range(KEYPAD_KEY
 
 #=Main loop
 #===============================================================================
-print("HELLO24") #DEBUG: Change me to ensure uploaded version matches.
+print("HELLO24x") #DEBUG: Change me to ensure uploaded version matches.
 print(f"MediaHub: ready to rock!")
 while True:
     #Filter built-in rotary encoder knob into state control signals:
