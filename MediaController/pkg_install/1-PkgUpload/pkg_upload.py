@@ -11,7 +11,9 @@ DEST_DRIVE = "E:\\"
 #os.environ["LIBPATH_CPYBUNDLE"] = r"C:\path\to\adafruit-circuitpython-bundle-9.x-mpy\lib"
 
 
-pkg = "MediaHub_AFMacropad"
+#pkg = "MediaHub_AFMacropad"
+#pkg = "MediaHub2p0_AFMacropad"
+pkg = "MediaHub2p0_KB2040"
 UploadPkg(pkg, DEST_DRIVE, refresh_libs=True)
 
 #Last line

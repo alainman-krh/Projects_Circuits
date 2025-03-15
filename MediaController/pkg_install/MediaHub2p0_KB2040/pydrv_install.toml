@@ -1,0 +1,22 @@
+[modules.CPYBUNDLE]
+dest = "$BOARDROOT/lib"
+folders = [
+"$LIBPATH_CPYBUNDLE/adafruit_hid",
+]
+
+[modules]
+dest = "$BOARDROOT/lib"
+folders = [
+"$PROJROOT/lib_cktpy/CelIRcom",
+"$PROJROOT/lib_cktpy/EasyCktIO",
+]
+
+[package]
+dest = "$BOARDROOT"
+files = [
+"$THISPKG/../MediaHub2p0_AFMacropad/CodeMap_MediaControls.py",
+"$THISPKG/SignalMap_LGremote.py",
+"$THISPKG/SignalMap_ADA389.py",
+"$THISPKG/Opt_MouseClick.py",
+"$THISPKG/main.py",
+]
