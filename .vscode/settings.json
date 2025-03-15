@@ -8,5 +8,6 @@
         //PCMediaRemote/MediaController/
         "${workspaceFolder}\\MediaController\\libpython",
         "${workspaceFolder}\\MediaController\\lib_cktpy",
+        "${workspaceFolder}\\MediaController\\pkg_install\\2-Common",
     ]
 }

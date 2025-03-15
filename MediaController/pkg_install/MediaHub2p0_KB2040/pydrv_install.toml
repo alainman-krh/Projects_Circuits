@@ -14,9 +14,10 @@ folders = [
 [package]
 dest = "$BOARDROOT"
 files = [
-"$THISPKG/../MediaHub2p0_AFMacropad/CodeMap_MediaControls.py",
-"$THISPKG/SignalMap_LGremote.py",
-"$THISPKG/SignalMap_ADA389.py",
+"$THISPKG/../2-Common/boot.py_ignorefornow",
+"$THISPKG/../2-Common/CodeMap_MediaControls.py",
+"$THISPKG/../2-Common/SignalMap_LGremote.py",
+"$THISPKG/../2-Common/SignalMap_ADA389.py",
 "$THISPKG/Opt_MouseClick.py",
 "$THISPKG/main.py",
 ]
