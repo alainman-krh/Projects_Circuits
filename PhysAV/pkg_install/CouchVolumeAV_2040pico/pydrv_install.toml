@@ -1,0 +1,17 @@
+[modules.CPYBUNDLE]
+dest = "$BOARDROOT/lib"
+folders = [
+]
+
+[modules]
+dest = "$BOARDROOT/lib"
+folders = [
+"$PROJROOT/libpython/MyState",
+]
+
+[package]
+dest = "$BOARDROOT"
+files = [
+"$THISPKG/filter_adc.py",
+"$THISPKG/main.py",
+]
