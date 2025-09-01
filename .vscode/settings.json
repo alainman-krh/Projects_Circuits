@@ -5,9 +5,11 @@
     },
     "python.analysis.extraPaths": [
         //Switch following to match project currently being modified:
-        //PCMediaRemote/MediaController/
-        "${workspaceFolder}\\MediaController\\libpython",
-        "${workspaceFolder}\\MediaController\\lib_cktpy",
-        "${workspaceFolder}\\MediaController\\pkg_install\\2-Common",
+        //PCMediaRemote/MediaController/PhysAV
+        "${workspaceFolder}\\PhysAV\\libpython",
+        "${workspaceFolder}\\PhysAV\\lib_cktpy",
+
+        //Specifically for MediaController:
+        "${workspaceFolder}\\MediaController\\pkg_install\\2-Common",      
     ]
 }
