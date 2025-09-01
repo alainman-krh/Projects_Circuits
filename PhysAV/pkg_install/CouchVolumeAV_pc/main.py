@@ -39,17 +39,9 @@ def serial_open(portmgr:PortManager, portid):
 log_section(f"connecting to volume control...")
 COM_VOLCTRL = serial_open(portmgr, portid_uctrl)
 
-def RdNPrn():
-	l = COM_VOLCTRL.io.readline_noblock()
-	print("RD")
-	print(l)
 
 #=Main loop
 #===============================================================================
-while False:
-#while True:
-#for i in range(10):
-	RdNPrn()
 while True:
 	COM_VOLCTRL.signalqueue_processio()
 	if not COM_VOLCTRL.signalqueue_isempty():
