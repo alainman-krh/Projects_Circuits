@@ -7,6 +7,7 @@ folders = [
 dest = "$BOARDROOT/lib"
 folders = [
 "$PROJROOT/libpython/MyState",
+"$PROJROOT/lib_cktpy/EasyCktIO",
 ]
 
 [package]
