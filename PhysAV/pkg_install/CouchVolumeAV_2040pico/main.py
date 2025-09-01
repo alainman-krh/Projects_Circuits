@@ -1,9 +1,6 @@
 #CouchVolumeAV_2040pico\main.py
 #-------------------------------------------------------------------------------
 from MyState.CtrlInputs.Timebase import now_ms, ms_elapsed
-from EasyCktIO.UART import SigCom_UART #Using UART microcontroller pins
-from EasyCktIO.USBSerial import SigCom_USBHost #Using USB serial
-from MyState.Signals import SigEvent, SigSet, SigUpdate
 from filter_adc import FilterADC
 from analogio import AnalogIn
 import board
@@ -18,8 +15,10 @@ volmainn_pin = board.GP27
 
 #=Configuration Options (Yamaha RXV-475)
 #===============================================================================
+MSGBASE_VOLMAIN = "SIG CTRL:MAINVOL " #Add: Volume
 volmain_normrange = (0.01, 0.99) #ADC sense limits normalized between (0, 1).
 volmain_dbrange = (-80, -10) #Safety: Don't let knob go beyond -10. Use remote/RXV if needed
+volmain_mute = -90 #Indicates mute is desired (avoids separate signal)
 volmain_stop_per_db = 2 #2 stops per dB (0.5dB steps)
 #Averaging filter length used to suppress volume changes due to measurement noise:
 avgfilt_nbits_len = 5 #32 samples. NOTE: keep <16bit to avoid overflow/use of largeint????
@@ -59,11 +58,6 @@ class VolumeState:
 #==Global declarations
 #===============================================================================
 ADC_max = 65535 #CktPy-specific. Not neccassarily representative of #of bits
-COM_MAINCTRL = SigCom_USBHost() #No link to state. Manually process messages.
-#UART_MAINCTRL = busio.UART(TX_MAINCTRL, RX_MAINCTRL, baudrate=BAUDRATE_MAINCTRL, receiver_buffer_size=SIGBUFSZ_RX) #Talking to main controller
-#COM_MAINCTRL = SigCom_UART(UART_MAINCTRL) #No link to state. Manually process messages.
-
-
 (volmain_dbmin, volmain_dbmax) = volmain_dbrange #unpack (convenience)
 volmain_Nstops = (volmain_dbmax - volmain_dbmin)*volmain_stop_per_db #Actually # of stops -1... or last index
 volmain_cmin = round(min(volmain_normrange)*ADC_max) #Minimum ADC code
@@ -80,14 +74,12 @@ volmain_filt = FilterADC(avgfilt_nbits_len, #Filter ADC/resistor noise
 	deltamin=int(avgfilt_deltamin_nstops*volmain_stops_per_code)
 )
 
-SIG_VOLMAIN_UPDATE = SigEvent("CTRL", "MAINVOL", val=-80)
-
 
 #=Main loop
 #===============================================================================
 print("HELLO24") #DEBUG: Change me to ensure uploaded version matches.
 print(f"CouchVolumeAV: ready to rock!")
-COM_MAINCTRL.io.write("\n") #Not sure why... but seems to be needed to not miss first message
+#COM_VOLCTRL.io.write("\n") #Not sure why... but seems to be needed to not miss first message
 while True:
 	#Read raw ADC values:
 	volmain_raw = (volmainp.value - volmainn.value)
@@ -103,12 +95,14 @@ while True:
 	if not changed:
 		pass
 	elif volmain_state.ismute:
-		print("MUTED!")
+		#print("MUTED!")
+		print(MSGBASE_VOLMAIN, end="")
+		print(volmain_mute*10)
 	else:
 		#Only compute dB if necessary:
 		volmain_db = volmain_dbmin + volmain_state.stopidx/volmain_stop_per_db
 		#print(f"volmain_stopidx: {volmain_state.stopidx}, volmain_db: {volmain_db}")
 		volmain_dbx10 = round(volmain_db*10)
-		SIG_VOLMAIN_UPDATE.val = volmain_dbx10
-		COM_MAINCTRL.send_signal(SIG_VOLMAIN_UPDATE)
+		print(MSGBASE_VOLMAIN, end="")
+		print(volmain_dbx10)
 #end program
