@@ -17,7 +17,8 @@ volmainn_pin = board.GP27
 #===============================================================================
 MSGBASE_VOLMAIN = "SIG CTRL:MAINVOL " #Add: Volume
 volmain_normrange = (0.01, 0.99) #ADC sense limits normalized between (0, 1).
-volmain_dbrange = (-80, -10) #Safety: Don't let knob go beyond -10. Use remote/RXV if needed
+#Can go downto -80dB... but limit to -40 due to log potentiometer range issue:
+volmain_dbrange = (-40, -10) #Safety: Don't let knob go beyond -10. Use remote/RXV if needed
 volmain_mute = -90 #Indicates mute is desired (avoids separate signal)
 volmain_stop_per_db = 2 #2 stops per dB (0.5dB steps)
 #Averaging filter length used to suppress volume changes due to measurement noise:
