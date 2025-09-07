@@ -3,13 +3,13 @@
 
 # List of projects
 <!----------------------------------------------------------------------------->
-- [`MediaController`](MediaController/pkg_install/README.md): Media control surfaces for Phone/PC/Mac.
-- [`PCMediaRemote`](PCMediaRemote/README.md): IR reciever for PC/Mac/Phone.
-- [`PhysAV`](PhysAV/README.md): Physical controls for AV setups.
+- [`MediaController`](projects/MediaController/README.md): Media control surfaces for Phone/PC/Mac.
+- [`PCMediaRemote`](projects/PCMediaRemote/README.md): IR reciever for PC/Mac/Phone.
+- [`PhysAV`](projects/PhysAV/README.md): Physical controls for AV setups.
 
 # Other demos
 <!----------------------------------------------------------------------------->
-- [`HomeLights_Wired`](HomeLights_Wired/pkg_install/README.md): Emulates a simplistic home light automation solution using "`MyState`" library.
+- [`HomeLights_Wired`](projects/HomeLights_Wired/README.md): Emulates a simplistic home light automation solution using "`MyState`" library.
 
 # Philosophy
 <!----------------------------------------------------------------------------->

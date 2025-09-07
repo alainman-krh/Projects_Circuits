@@ -54,8 +54,8 @@ TODO:
 
 # Additional resources/links
 <!----------------------------------------------------------------------------->
-- [(DOCS) `CelIRcom` library](../lib_cktpy/CelIRcom/1-README.md)
+- [(DOCS) `CelIRcom` library](../../lib_cktpy/CelIRcom/1-README.md)
 - [(DOCS) Adafruit HID library (USB Human Interface Devices)][LIB_ADA_HID]
 - [(DOCS) Adafruit MacroPad RP2040][ADALRN_RP2040MPAD]: How to setup/assemble your macropad.
 - [(DOCS) CircuitPython pulseio module][LIB_CKTPY_PULSEIO]
-- [More on IR communications/decoding](../lib_cktpy/CelIRcom/1-Resources.md)
+- [More on IR communications/decoding](../../lib_cktpy/CelIRcom/1-Resources.md)
