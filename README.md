@@ -5,6 +5,7 @@
 <!----------------------------------------------------------------------------->
 - [`MediaController`](MediaController/pkg_install/README.md): Media control surfaces for Phone/PC/Mac.
 - [`PCMediaRemote`](PCMediaRemote/README.md): IR reciever for PC/Mac/Phone.
+- [`PhysAV`](PhysAV/README.md): Physical controls for AV setups.
 
 # Other demos
 <!----------------------------------------------------------------------------->

@@ -6,7 +6,7 @@ folders = [
 [modules]
 dest = "$BOARDROOT/lib"
 folders = [
-"$PROJROOT/libpython/MyState",
+"$LIBROOT/libpython/MyState",
 ]
 
 [package]

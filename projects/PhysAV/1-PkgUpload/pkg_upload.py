@@ -1,6 +1,6 @@
 #pkg_upload.py: Upload project code to CircuitPython board
 #-------------------------------------------------------------------------------
-from UploadTools import UploadPkg
+from ZIncludeRuntoolsPyLib import PKGINSTALLER
 
 #User config
 #-------------------------------------------------------------------------------
@@ -12,7 +12,7 @@ DEST_DRIVE = "E:\\"
 pkg = "CouchVolumeAV_2040pico"
 
 #Upload package defined in `..\$pkg\pydrv_install.toml`:
-UploadPkg(pkg, DEST_DRIVE, refresh_libs=True)
+PKGINSTALLER.upload(pkg, DEST_DRIVE, refresh_libs=True)
 r"""NOTE:
 - `refresh_libs=True` uploads dependencies from `[modules]` section of pydrv_install.toml.
   (Change significantly less during project code development)
