@@ -7,6 +7,8 @@ import tomllib
 import shutil
 
 
+#=Global controls
+#===============================================================================
 DEBUG_ONLY = False
 
 
@@ -50,7 +52,7 @@ class PkgInstaller:
 		self.path_libroot = path_libroot
 		self.path_pkgroot = path_pkgroot
 
-	def _upadateenv(self, pkg, dest_drive):
+	def _updateenv(self, pkg, dest_drive):
 		"""Update environment variables used to specify paths"""
 		path_libroot = abspath(self.path_libroot)
 		path_pkgroot = abspath(self.path_pkgroot)
@@ -59,7 +61,8 @@ class PkgInstaller:
 		os.environ["BOARDROOT"] = abspath(dest_drive)
 
 	def upload(self, pkg, dest_drive, refresh_libs=True):
-		self._upadateenv(pkg, dest_drive)
+		#Prepare environment variables present in pydrv_install.toml:
+		self._updateenv(pkg, dest_drive)
 
 		#Read in `pydrv_install.toml` definition:	
 		cfg = None #Define scope
