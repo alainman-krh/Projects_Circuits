@@ -12,6 +12,7 @@ class FilterADC:
 		"""
 		#NOTE:
 		- filter length = 2^nbits_len. Pick something that won't overflow given 
+		- UPDATE: Algorithm doesn't actually need power of 2. Keeping just in case.
 		"""
 		N = 1<<nbits_len
 		self.mask = N-1
