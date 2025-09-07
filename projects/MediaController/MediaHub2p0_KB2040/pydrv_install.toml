@@ -7,8 +7,8 @@ folders = [
 [modules]
 dest = "$BOARDROOT/lib"
 folders = [
-"$PROJROOT/lib_cktpy/CelIRcom",
-"$PROJROOT/lib_cktpy/EasyCktIO",
+"$LIBROOT/lib_cktpy/CelIRcom",
+"$LIBROOT/lib_cktpy/EasyCktIO",
 ]
 
 [package]
