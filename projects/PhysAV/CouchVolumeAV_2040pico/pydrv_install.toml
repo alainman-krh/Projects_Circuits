@@ -12,6 +12,6 @@ folders = [
 [package]
 dest = "$BOARDROOT"
 files = [
-"$THISPKG/filter_adc.py",
+"$THISPKG/filter_sense.py",
 "$THISPKG/main.py",
 ]

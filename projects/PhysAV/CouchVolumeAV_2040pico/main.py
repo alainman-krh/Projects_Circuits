@@ -1,31 +1,35 @@
 #CouchVolumeAV_2040pico\main.py
 #-------------------------------------------------------------------------------
 from MyState.CtrlInputs.Timebase import now_ms, ms_elapsed
-from filter_adc import FilterADC
+from filter_sense import FilterNoisy_Int, FilterRescale, CPY_ADC_NBITS
 from analogio import AnalogIn
+from time import sleep
 import board
+
+DEBUGONLY = False
 
 
 #=Platform/build-dependent config (RP2040-Pico)
 #===============================================================================
-#HW: Behringer Monitor 1 sensed with RP2040-Pico
+#ADC-sensor: RP2040-Pico built-in
 volmainp_pin = board.GP28
 volmainn_pin = board.GP27
+#Potentiometer: Behringer Monitor 1 - Sharply drops in bottom 20% or ADC range:
+VOLMAIN_NORMRANGE = (0.2, 0.99) #ADC sense limits normalized between (0, 1).
 
 
 #=Configuration Options (Yamaha RXV-475)
 #===============================================================================
-MSGBASE_VOLMAIN = "SIG CTRL:MAINVOL " #Add: Volume
-volmain_normrange = (0.01, 0.99) #ADC sense limits normalized between (0, 1).
+SENSEMAP_NBITS = 9 #Downsample sensed value to reduce size of mapping table
+MSGBASE_VOLMAIN = "SIG CTRL:MAINVOL " #Append: Volume in 0.5dB increments (-80dB...10dB?)
 #Can go downto -80dB... but limit to -40 due to log potentiometer range issue:
-volmain_dbrange = (-40, -10) #Safety: Don't let knob go beyond -10. Use remote/RXV if needed
-volmain_mute = -90 #Indicates mute is desired (avoids separate signal)
-volmain_stop_per_db = 2 #2 stops per dB (0.5dB steps)
+VOLMAIN_DBRANGE = (-40, -10) #Safety: Don't let knob go beyond -10. Use remote/RXV if needed
+VOLMAIN_MUTE = -90 #Indicates mute is desired (avoids separate signal)
 #Averaging filter length used to suppress volume changes due to measurement noise:
-avgfilt_nbits_len = 5 #32 samples. NOTE: keep <16bit to avoid overflow/use of largeint????
-avgfilt_thresh_nstops = 4 #How many stops of noise do we have to filter?
-avgfilt_deltamin_nstops = 1 #How many stops does the average have to change before registering?
-Tupdate_ms = 100 #ms: Maximum update rate
+NOISEFILT_NBITS_AVGLEN = 3 #32 samples. NOTE: keep <16bit to avoid overflow/use of largeint????
+NOISEFILT_NSTOPS_NOAVG = 4 #How many stops of noise do we have to filter?
+NOISEFILT_NSTOPS_NOISEFLOOR = 1 #How many stops does the average have to change before registering?
+TUPDATE_MS = 100 #ms: Maximum update rate
 
 
 #==VolumeState object
@@ -34,11 +38,12 @@ class VolumeState:
 	def __init__(self, Tupdate_ms):
 		self.ismute = True
 		self.stopidx = 0 #Current "stop" index (volume level)
-		self.canupdate = True
 		self.lastupdate_ms = now_ms()
+		self.canupdate = True #Don't just rely on lastupdate_ms (avoid logic error after roll-over)
 		self.Tupdate_ms = Tupdate_ms
 
 	def tryupdate(self, ismute_new, stopidx_new):
+		"""Don't update unless changed"""
 		_now_ms = now_ms()
 		if not self.canupdate:
 			if ms_elapsed(self.lastupdate_ms, _now_ms) > self.Tupdate_ms:
@@ -58,22 +63,37 @@ class VolumeState:
 
 #==Global declarations
 #===============================================================================
-ADC_max = 65535 #CktPy-specific. Not neccassarily representative of #of bits
-(volmain_dbmin, volmain_dbmax) = volmain_dbrange #unpack (convenience)
-volmain_Nstops = (volmain_dbmax - volmain_dbmin)*volmain_stop_per_db #Actually # of stops -1... or last index
-volmain_cmin = round(min(volmain_normrange)*ADC_max) #Minimum ADC code
-volmain_crange = round(ADC_max*(max(volmain_normrange)-min(volmain_normrange)))
-#Convert delta code to # of stops:
-volmain_stops_per_code = volmain_crange // (volmain_Nstops)
-volmain_c2stops = (volmain_Nstops)/volmain_crange
+#VAL_MUTE = -float('inf')
+VAL_MUTE = round(10*VOLMAIN_MUTE)
+VOLMAIN_STOP_PER_DB = 2 #2 stops per dB (0.5dB steps)
+SENSEREDUCE_NBITS = CPY_ADC_NBITS-SENSEMAP_NBITS #Down-res for efficiency
+SENSEMAP_MAXVAL = (1<<SENSEMAP_NBITS)-1
+SENSEMAP_VALIDMIN = round(min(VOLMAIN_NORMRANGE)*SENSEMAP_MAXVAL)
+SENSEMAP_VALIDMAX = round(max(VOLMAIN_NORMRANGE)*SENSEMAP_MAXVAL)
+(VOLMAIN_DBMIN, VOLMAIN_DBMAX) = VOLMAIN_DBRANGE #unpack (convenience)
+VOLMAIN_NSTOPS = (VOLMAIN_DBMAX - VOLMAIN_DBMIN)*VOLMAIN_STOP_PER_DB #Actually # of stops -1... or last index
+SENSEIN_PER_STOP = (SENSEMAP_VALIDMAX-SENSEMAP_VALIDMIN) / VOLMAIN_NSTOPS
+
 #Senses differential volume potentiometer:
 volmainp = AnalogIn(volmainp_pin)
 volmainn = AnalogIn(volmainn_pin)
-volmain_state = VolumeState(Tupdate_ms) #Main volume state
-volmain_filt = FilterADC(avgfilt_nbits_len, #Filter ADC/resistor noise
-	thresh=int(avgfilt_thresh_nstops*volmain_stops_per_code),
-	deltamin=int(avgfilt_deltamin_nstops*volmain_stops_per_code)
+volmain_state = VolumeState(TUPDATE_MS) #Main volume state
+volmain_rescale = FilterRescale( #Build with output as "stop number"
+	out_range=(0, VOLMAIN_NSTOPS),
+	in_range=(SENSEMAP_VALIDMIN, SENSEMAP_VALIDMAX),
+	under=VAL_MUTE, over=max(VOLMAIN_DBRANGE)*10,
 )
+fmap = volmain_rescale.fmap
+for i in range(len(fmap)): #Re-compute map to get desired 0.5dB increments (x10):
+	fmap[i] = min(VOLMAIN_DBRANGE)*10 + fmap[i]*(10//2)
+#print(fmap) #Debug
+volmain_denoise = FilterNoisy_Int(NOISEFILT_NBITS_AVGLEN, #Filter ADC/resistor noise
+#NOTE:Filtering seem even better with 100uF caps on sense terminals!!
+	thresh_avg=NOISEFILT_NSTOPS_NOAVG*SENSEIN_PER_STOP,
+	thresh_noise=NOISEFILT_NSTOPS_NOISEFLOOR*SENSEIN_PER_STOP
+)
+#print(f"thresh_avg: {volmain_denoise.thresh_avg}, thresh_noise: {volmain_denoise.thresh_noise}")
+#raise Exception("STOP")
 
 
 #=Main loop
@@ -83,27 +103,20 @@ print(f"CouchVolumeAV: ready to rock!")
 #COM_VOLCTRL.io.write("\n") #Not sure why... but seems to be needed to not miss first message
 while True:
 	#Read raw ADC values:
-	volmain_raw = (volmainp.value - volmainn.value)
-	volmain_read = volmain_filt.getfiltered(volmain_raw)
-	#print(f"volmain_read: {volmain_read} (volmainp: {volmainp.value}, volmainn: {volmainn.value})")
+	volmain_read = (volmainp.value - volmainn.value)>>SENSEREDUCE_NBITS
+	volmain_read = volmain_denoise.getfiltered(volmain_read)
+	#Convert to dBs:
+	volmain_dB = volmain_rescale.getfiltered(volmain_read)
 
 	#Convert to "stop index":
-	ismute_now = (volmain_read <= volmain_cmin)
-	volmain_stopidx_now = round((volmain_read-volmain_cmin) * volmain_c2stops)
-	volmain_stopidx_now = min(max(0, volmain_stopidx_now), volmain_Nstops) #Clamp
+	ismute_now = (volmain_dB == VAL_MUTE)
 
-	changed = volmain_state.tryupdate(ismute_now, volmain_stopidx_now)
+	changed = volmain_state.tryupdate(ismute_now, volmain_dB)
 	if not changed:
 		pass
-	elif volmain_state.ismute:
-		#print("MUTED!")
-		print(MSGBASE_VOLMAIN, end="")
-		print(volmain_mute*10)
 	else:
-		#Only compute dB if necessary:
-		volmain_db = volmain_dbmin + volmain_state.stopidx/volmain_stop_per_db
-		#print(f"volmain_stopidx: {volmain_state.stopidx}, volmain_db: {volmain_db}")
-		volmain_dbx10 = round(volmain_db*10)
+		if DEBUGONLY and volmain_state.ismute:
+			print("MUTED!")
 		print(MSGBASE_VOLMAIN, end="")
-		print(volmain_dbx10)
+		print(volmain_dB)
 #end program
